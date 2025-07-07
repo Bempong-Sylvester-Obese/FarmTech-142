@@ -54,7 +54,7 @@ def cal_growable_mods(df, modifiable_cols_list, fcc_cols_list):
 
 
 # Data extraction and transformation
-df = pd.DataFrame([], columns=['x_idx', 'y_idx'])
+df = pd.DataFrame({'x_idx': [], 'y_idx': []})
 
 for dataset in DATASET_ID_MAPPING.keys():
     dataset_id = DATASET_ID_MAPPING[dataset]
@@ -62,7 +62,7 @@ for dataset in DATASET_ID_MAPPING.keys():
     temp_df = pd.DataFrame(data_arr[0])
     temp_df = temp_df.stack()
     temp_df = temp_df.reset_index()
-    temp_df.columns = ['x_idx', 'y_idx', dataset]
+    temp_df.columns = ['x_idx', 'y_idx', dataset]  # type: ignore
     df = df.merge(temp_df, how='outer', on=['x_idx', 'y_idx'])
 
 ## Join with FCC mapping
@@ -149,8 +149,7 @@ with col1:
 
 with col2:
     for col in ['Total Nitrogen', 'Soil Phosphorous', 'Soil Potassium', 'Soil pH']:
-        subset = df[[col]]
-        chart = alt.Chart(subset, title=col).mark_bar().encode(
+        chart = alt.Chart(df, title=col).mark_bar().encode(
             alt.X(col, bin=True),
             y='count()',
             tooltip='count()'
@@ -208,13 +207,13 @@ col1, col2 = st.columns(2)
 with col1:
     c = functions.hover_line_chart(data=rainfall.T.reset_index(), x='index', y='rainfall',
                                    x_title="Month", y_title='Total Rainfall (mm)',
-                                   title=f"Forecasted Rainfall in TamilNadu for 2023")
+                                   title=f"Forecasted Rainfall in TamilNadu for 2023")  # type: ignore
     st.altair_chart(c, use_container_width=True)
 
 with col2:
     c = functions.hover_line_chart(data=temp.T.reset_index(), x='index', y='temp',
                                    x_title="Month", y_title='Average Temp (C)',
-                                   title=f"Forecasted Monthly Temperature in TamilNadu for 2023")
+                                   title=f"Forecasted Monthly Temperature in TamilNadu for 2023")  # type: ignore
     st.altair_chart(c, use_container_width=True)
 
 
